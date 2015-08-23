@@ -1,0 +1,15 @@
+base
+Matrix
+arules
+gplots
+ROCR
+dplyr
+MASS
+foreach
+iterators
+doParallel
+shiny
+glmnet
+devtools
+slidify
+slidifyLibraries

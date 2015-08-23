@@ -1,0 +1,84 @@
+---
+title       : Iris Analysis And Prediction
+subtitle    : Prediction of Species using glmnet
+author      : Roshan Shetty
+job         : Intern at SAP, Budding Data Scientist
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Motivation
+
+1. Iris features are a good indicator of species
+2. Dataset is available which can be used for prediction
+3. Helps anyone interested to collect new data and make predictions
+
+--- .class #id 
+
+## Analysis
+
+Iris summary gives indication of range of inputs to be used
+```{r}
+summary(iris)
+```
+
+---
+
+## Model
+
+1. A glmnet model is used for predicting the species of the data
+```{r echo=TRUE}
+cv.fit <- cv.glmnet(as.matrix(iris[,-5]), 
+                    iris[,5], alpha=0.8, 
+                    family="multinomial")
+```
+
+2. The predict function helps in predicting new values
+```{r echo=TRUE}
+  species <- predict(cv.fit, 
+                        newx=as.matrix(test),
+                        type="class")
+```
+
+--- 
+
+## Application UI
+The following UI will be visible to the user. Note that this does not run the prediction here.
+```{r opts.label = 'shiny'}
+slidifyUI(
+    #headerPanel("IRIS data Prediction Assignment using Shiny"),
+    sidebarPanel(      
+      #textInput(inputId="Sepal Length", label="Input Text1"),
+      #textInput(inputId="text2", label="Input Text2"),
+      numericInput(inputId='Sepal.Length',label='Sepal Length',value=5,min=4.3, max=7.9, step=0.1),
+      numericInput(inputId='Sepal.Width',label='Sepal Width',value=2.5,min=2, max=4.4, step=0.1),
+      numericInput(inputId='Petal.Length',label='Petal Length',value=2,min=1, max=6.9, step=0.1),
+      numericInput(inputId='Petal.Width',label='Petal Width',value=1,min=0.1, max=2.5, step=0.1),
+      submitButton('Submit')
+      #actionButton("goButton","Go!")
+    ),
+    mainPanel(
+      h3('Results of prediction'),
+      h4('You entered'),
+      p('Sepal Length'),
+      textOutput('sepalLen'),
+      p('Sepal Width'),
+      textOutput('sepalWid'),
+      p('Petal Length'),
+      textOutput('petalLen'),
+      p('Petal Width'),
+      textOutput('petalWid'),
+      #p('Inside text, but non-reactive'),
+      #textOutput('text5'),            
+      h4('Which results in a prediction of '),
+      textOutput("Species")
+      )   
+    )
+
+```
+
+
